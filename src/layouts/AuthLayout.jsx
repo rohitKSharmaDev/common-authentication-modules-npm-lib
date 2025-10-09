@@ -3,8 +3,11 @@ import { Grid, useMediaQuery, useTheme, Box } from "@mui/material";
 import LangSelector from "../components/LangSelector/LangSelector.jsx";
 import { Outlet } from "react-router";
 import { FormattedMessage } from 'react-intl';
+import { useAuthContext } from "../providers/AuthProvider.jsx";
 
-const AuthLayout = ({ activeBrandConfig }) => {
+const AuthLayout = () => {
+  const { config } = useAuthContext();
+
   const theme = useTheme();
   const isSmScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -35,7 +38,7 @@ const AuthLayout = ({ activeBrandConfig }) => {
           }}
         >
           <img
-            src={activeBrandConfig.brandLogo.src}
+            src={config?.activeBrandConfig?.brandLogo.src}
             alt=""
             style={{ height: "1.875rem" }}
           />
@@ -59,27 +62,27 @@ const AuthLayout = ({ activeBrandConfig }) => {
           backgroundRepeat: 'no-repeat',
           backgroundPositionX: 'right',
           backgroundPositionY: 'center',
-          backgroundImage: !isSmScreen ? `url(${activeBrandConfig.forgetPasswordPageSideImg(theme.direction)})` : ''
+          backgroundImage: !isSmScreen ? `url(${config?.activeBrandConfig?.forgetPasswordPageSideImg(theme.direction)})` : ''
         }}>
           <Grid
             item
             xs={12}
-            sm={activeBrandConfig.forgetPasswordPageSideImg(theme.direction) ? 6 : 12}
-            lg={activeBrandConfig.forgetPasswordPageSideImg(theme.direction) ? 6 : 12}
-            md={activeBrandConfig.forgetPasswordPageSideImg(theme.direction) ? 6 : 12}
+            sm={config?.activeBrandConfig?.forgetPasswordPageSideImg(theme.direction) ? 6 : 12}
+            lg={config?.activeBrandConfig?.forgetPasswordPageSideImg(theme.direction) ? 6 : 12}
+            md={config?.activeBrandConfig?.forgetPasswordPageSideImg(theme.direction) ? 6 : 12}
           >
             <Outlet />
           </Grid>
           {
-            activeBrandConfig.forgetPasswordPageSideImg(theme.direction) && !isSmScreen ?
+            config?.activeBrandConfig?.forgetPasswordPageSideImg(theme.direction) && !isSmScreen ?
               <Grid item sm={6} md={6} lg={6} sx={{ position: 'relative' }}>
                 {
-                  activeBrandConfig.loginActinBtnHref ? <Box
+                  config?.activeBrandConfig?.loginActinBtnHref ? <Box
                     position="absolute"
                     top="20px"
                     left="30%"
                   >
-                    <a href={activeBrandConfig.loginActinBtnHref}
+                    <a href={config?.activeBrandConfig?.loginActinBtnHref}
                       style={{
                         display: 'inline-block',
                         textAlign: 'center',

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Stack, Box, Typography, Button, Link } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router';

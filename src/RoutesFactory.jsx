@@ -8,7 +8,7 @@ import AuthLayoutTwo from "./layouts/AuthLayoutTwo.jsx";
 import LoginPage from "./pages/Login/LoginPage.jsx";
 import SignUpPage from "./pages/SignUp/SignUpPage.jsx";
 import Set2FA from "./pages/Set2FA/Set2fa.jsx";
-// import ForgotPasswordPage from "./pages/ForgotPassword";
+import ForgotPasswordPage from "./pages/ForgetPassword/ForgetPasswordPage.jsx";
 // import ResetPasswordPage from "./pages/ResetPassword";
 // import TwoFactorPage from "./pages/TwoFactorAuth";
 // import AcceptInvitation from "./pages/AcceptInvitation";
@@ -62,16 +62,16 @@ export function createAuthRoutes(authAdapter) {
           }
         ]
       },
-      // {
-      //   path: "",
-      //   element: <AuthLayout />,
-      //   children: [
-      //     {
-      //       path: "forget-password",
-      //       element: <ForgetPass />,
-      //     },
-      //   ]
-      // },
+      {
+        path: "",
+        element: <AuthLayout />,
+        children: [
+          {
+            path: "forget-password",
+            element: <ForgotPasswordPage />,
+          },
+        ]
+      },
       {
         path: '',
         element: <AuthLayoutTwo />,

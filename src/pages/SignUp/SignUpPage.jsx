@@ -88,16 +88,16 @@ const CustomTextField = ({ name, validateAsync = async (value, signal) => null, 
       setLoading(true);
       isValidRef.current = true;
       validate(value, meta, isValidating, {
-          onSuccess: () => {
-              isValidRef.current = false;
-              setLoading(false)
-          },
-          onError: err => {
-              if (err?.name != 'CanceledError') {
-                  isValidRef.current = true;
-                  setLoading(false);
-              }
+        onSuccess: () => {
+          isValidRef.current = false;
+          setLoading(false)
+        },
+        onError: err => {
+          if (err?.name != 'CanceledError') {
+            isValidRef.current = false;
+            setLoading(false);
           }
+        }
       });
     }
   }, [value, isValidating]);
@@ -141,7 +141,7 @@ const SignUpPage = () => {
       .min(3, <FormattedMessage id="username-min-length" />)
       .isI18nUserName(),
     email: Validator.string()
-      .izEmail(<FormattedMessage id="invalid-email-address" />)
+      .databEmail(<FormattedMessage id="invalid-email-address" />)
       .max(255, <FormattedMessage id="email-max-length" defaultMessage="Email cannot be more than 255 characters long." />)
       .required(<FormattedMessage id="email-is-required" />)
       .noLeadingOrTrailingSpace(),
@@ -175,7 +175,7 @@ const SignUpPage = () => {
   };
 
   const handleSubmit = async (values) => {
-    if (isAsyncValidatingRef.current) return;
+    isAsyncValidatingRef.current = false;
 
     try {
       setIsSubmitting(true)
@@ -193,8 +193,8 @@ const SignUpPage = () => {
 
   const handleAsyncValidation = async (value, signal) => {
     const res = await config.services.isEmailExist(value, signal);
-    if (res?.data.exists === true) {
-      return <FormattedMessage id="email-already-exists" values={{signin: <Link href="/login">{intl.formatMessage({id: "sign-in"})}</Link> }} />;
+    if (res?.exists === true) {
+      return "email-already-exists";
     } else {
       return "";
     }
@@ -252,7 +252,8 @@ const SignUpPage = () => {
                 <CustomTextField
                   name="email"
                   validateAsync={handleAsyncValidation}
-                  isValidRef={isAsyncValidatingRef}>
+                  isValidRef={isAsyncValidatingRef}
+                >
                   {({ field, meta, loading }) => (
                     <TextField
                       {...field}
@@ -264,13 +265,35 @@ const SignUpPage = () => {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      error={meta.touched && (!!meta.error)}
-                      helperText={meta.touched && (meta.error || (loading ? "Checking availability..." : ""))}
+                      error={meta.touched && Boolean(meta.error)}
+                      helperText={
+                        meta.touched &&
+                        (loading ? (
+                          "Checking availability..."
+                        ) : typeof meta.error === "string" && meta.error.trim() !== "" ? (
+                          // ✅ Only render FormattedMessage when meta.error is a valid string id
+                          <FormattedMessage
+                            id={meta.error}
+                            values={{
+                              signin: (
+                                <Link href="/login">
+                                  {intl.formatMessage({ id: "sign-in" })}
+                                </Link>
+                              ),
+                            }}
+                          />
+                        ) : React.isValidElement(meta.error) ? (
+                          // ✅ If it's already a React element, just render it directly
+                          meta.error
+                        ) : (
+                          ""
+                        ))
+                      }
                       sx={{ mb: 3.5 }}
                     />
                   )}
-
                 </CustomTextField>
+
 
                 <Field name="password">
                   {({ field, meta }) => (

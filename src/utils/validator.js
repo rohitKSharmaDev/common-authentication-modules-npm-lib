@@ -75,8 +75,8 @@ Validator.addMethod(Validator.StringSchema, 'noLeadingOrTrailingSpace', function
   });
 });
 
-Validator.addMethod(Validator.StringSchema, 'ymEmail', function (message = "Enter valid email id") {
-  return this.test('ymEmail', message, (value) => {
+Validator.addMethod(Validator.StringSchema, 'databEmail', function (message = "Enter valid email id") {
+  return this.test('databEmail', message, (value) => {
     if (!value) return true;
 
     return (/^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/.test(value)) && !/\.\./.test(value);

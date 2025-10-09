@@ -5,11 +5,12 @@ import { useNavigate } from "react-router";
 
 import MainCard from "../../../components/common/MainCard.jsx";
 import CircularLoader from "../../../components/common/CircularLoader.jsx";
-import { useAuth, useAuthContext } from "../../../providers/AuthProvider.jsx";
+import { useAuth, useAuthContext, useAuthAdapter } from "../../../providers/AuthProvider.jsx";
 
 const GenerateAuthCode = ({ authToken: initialAuthToken }) => {
   const { onAuthSuccess } = useAuth();
   const { config } = useAuthContext();
+  const adapter = useAuthAdapter();
 
   const [authToken, setAuthToken] = useState(initialAuthToken);
   const [recoveryCodes, setRecoveryCodes] = useState([]);
@@ -29,7 +30,7 @@ const GenerateAuthCode = ({ authToken: initialAuthToken }) => {
   }
 
   const showSnackBar = (msg, isSuccess)=> {
-    return config.notify(getMessage(msg), isSuccess);
+    return adapter.notify(getMessage(msg), isSuccess);
   };
 
   const handleExit = (shouldDownload = false) => {

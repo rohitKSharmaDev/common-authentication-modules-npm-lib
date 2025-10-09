@@ -15,10 +15,11 @@ import GenerateAuthCode from "./components/GenerateAuthCode.jsx";
 import { useLocation, useNavigate } from 'react-router-dom';
 import OTPTimer from "./components/OTPTimer.jsx";
 
-import { useAuth, useAuthContext } from "../../providers/AuthProvider.jsx";
+import { useAuth, useAuthContext, useAuthAdapter } from "../../providers/AuthProvider.jsx";
 import CircularLoader from "../../components/common/CircularLoader.jsx";
 
 const Set2FA = () => {
+  const adapter = useAuthAdapter();
   const { onAuthSuccess } = useAuth();
   const { config } = useAuthContext();
 
@@ -50,7 +51,7 @@ const Set2FA = () => {
   const [startTimerFlag, setStartTimerFlag] = useState(false);
 
   const showSnackBar = (msg, isSuccess)=> {
-    return config.notify(getMessage(msg), isSuccess);
+    return adapter.notify(getMessage(msg), isSuccess);
   };
 
   const generateSecret = (authType)=> {
@@ -59,7 +60,7 @@ const Set2FA = () => {
       "userHash": userHash,
       "authType": authType
     }).then((response)=> {
-      const {secret, qrImage, userHash} = response.data;
+      const {secret, qrImage, userHash} = response;
       if(secret && qrImage) {
         setAuthType(authType);
 
@@ -136,15 +137,15 @@ const Set2FA = () => {
       "otp": otpValue,
       "set2FA": 1 //optional
     }).then((res)=> {
-      if(res.data?.token) {
+      if(res.token) {
         showSnackBar("2FA-success", true);
         setIs2FACompleted(true);
 
         if(authType == 1) {
-          setAuthToken(res.data.token);
+          setAuthToken(res.token);
           
         } else {
-          onAuthSuccess({ token: res.data.token });
+          onAuthSuccess({ token: res.token });
           navigate("/on-board", { state: 'newUser' });
         }
         

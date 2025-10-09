@@ -1,9 +1,10 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import {
   Card,
   CardContent,
   CardHeader,
   Divider,
+  useTheme,
   Typography,
 } from '@mui/material';
 import { useAuthAdapter } from '../../providers/AuthProvider.jsx';
@@ -38,6 +39,7 @@ const MainCard = forwardRef(
     },
     ref
   ) => {
+    const theme = useTheme();
     const adapter = useAuthAdapter();
     const themeContrast = adapter?.themeContrast ? adapter.themeContrast : false;
 

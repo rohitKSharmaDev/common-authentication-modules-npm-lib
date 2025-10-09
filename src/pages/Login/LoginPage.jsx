@@ -18,10 +18,11 @@ import {
 import { useIntl, FormattedMessage } from "react-intl";
 import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 
-import { useAuth, useAuthContext } from "../../providers/AuthProvider.jsx";
+import { useAuth, useAuthContext, useAuthAdapter } from "../../providers/AuthProvider.jsx";
 import TwoFactorAuth from "./TwoFactorAuth.jsx"; // <-- library’s 2FA component
 
 const LoginPage = () => {
+  const adapter = useAuthAdapter();
   const { config, features } = useAuthContext();  // injected from consuming app
   const { onAuthSuccess } = useAuth();  // comes from authAdapter
   const intl = useIntl();
@@ -38,7 +39,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (state?.messageId && config?.notify) {
-      config.notify(<FormattedMessage id={state.messageId} />);
+      adapter.notify(<FormattedMessage id={state.messageId} />);
     }
   }, [state, config]);
 

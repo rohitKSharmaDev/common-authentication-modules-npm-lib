@@ -15,13 +15,12 @@ import GenerateAuthCode from "./components/GenerateAuthCode.jsx";
 import { useLocation, useNavigate } from 'react-router-dom';
 import OTPTimer from "./components/OTPTimer.jsx";
 
-import { useAuth, useAuthContext, useAuthAdapter } from "../../providers/AuthProvider.jsx";
+import { useAuth, useAuthContext } from "../../providers/AuthProvider.jsx";
 import CircularLoader from "../../components/common/CircularLoader.jsx";
 
 const Set2FA = () => {
-  const adapter = useAuthAdapter();
   const { onAuthSuccess } = useAuth();
-  const { config } = useAuthContext();
+  const { config, notify } = useAuthContext();
 
   const location = useLocation();
   const intl = useIntl();
@@ -51,7 +50,7 @@ const Set2FA = () => {
   const [startTimerFlag, setStartTimerFlag] = useState(false);
 
   const showSnackBar = (msg, isSuccess)=> {
-    return adapter.notify(getMessage(msg), isSuccess);
+    notify(getMessage(msg), isSuccess ? "success" : "error");
   };
 
   const generateSecret = (authType)=> {
@@ -145,8 +144,11 @@ const Set2FA = () => {
           setAuthToken(res.token);
           
         } else {
-          onAuthSuccess({ token: res.token });
-          navigate("/on-board", { state: 'newUser' });
+          setTimeout(() => {
+            onAuthSuccess({ token: res.token });
+            navigate("/on-board", { state: 'newUser' });
+            
+          }, 2000);
         }
         
       } else {

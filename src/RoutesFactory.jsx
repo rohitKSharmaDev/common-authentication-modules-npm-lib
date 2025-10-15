@@ -9,11 +9,10 @@ import LoginPage from "./pages/Login/LoginPage.jsx";
 import SignUpPage from "./pages/SignUp/SignUpPage.jsx";
 import Set2FA from "./pages/Set2FA/Set2fa.jsx";
 import ForgotPasswordPage from "./pages/ForgetPassword/ForgetPasswordPage.jsx";
-// import ResetPasswordPage from "./pages/ResetPassword";
-// import TwoFactorPage from "./pages/TwoFactorAuth";
-// import AcceptInvitation from "./pages/AcceptInvitation";
-// import VerifyEmailPage from "./pages/VerifyEmail";
-// import GLoginPage from "./pages/GLogin";
+import ResetPasswordPage from "./pages/ResetPassword/ResetPasswordPage.jsx";
+import AcceptInvitation from "./pages/AcceptInvitation/AcceptInvitationPage.jsx";
+import VerifyEmailPage from "./pages/VerifyEmail/VerifyEmailPage.jsx";
+import GLoginPage from "./pages/GLogin/GLoginPage.jsx";
 
 /**
  * createAuthRoutes(authAdapter)
@@ -37,142 +36,81 @@ export function createAuthRoutes(authAdapter) {
 
   return {
     path: "/",
-    element: <GuestGuard />, // 👈 guest guard wraps the whole auth tree
     children: [
       {
-        index: true,
-        element: <Navigate to="/login" replace />
-      },
-      {
-        element: <AuthCarouselLayout />, // 👈 layout wraps the form area
-        children: [
+        path: "",
+        element: <GuestGuard />,
+        children :[
           {
-            path: "login",
-            element: <LoginPage />
+            index: true,
+            element: <Navigate to="/login" replace />
           },
           {
-            path: "signup",
-            element: <SignUpGuard />, // 👈 guard as route element
+            element: <AuthCarouselLayout />, // 👈 layout wraps the form area
             children: [
               {
-                index: true,
-                element: <SignUpPage />
+                path: "login",
+                element: <LoginPage />
+              },
+              {
+                path: "signup",
+                element: <SignUpGuard />, // 👈 guard as route element
+                children: [
+                  {
+                    index: true,
+                    element: <SignUpPage />
+                  }
+                ]
               }
             ]
-          }
-        ]
-      },
-      {
-        path: "",
-        element: <AuthLayout />,
-        children: [
+          },
           {
-            path: "forget-password",
-            element: <ForgotPasswordPage />,
+            path: "oauth/google",
+            element: <GLoginPage />
+          },
+          {
+            path: "",
+            element: <AuthLayout />,
+            children: [
+              {
+                path: "forget-password",
+                element: <ForgotPasswordPage />,
+              },
+            ]
+          },
+          {
+            path: '',
+            element: <AuthLayoutTwo />,
+            children: [
+              {
+                path: 'set-2fa',
+                element: <Set2FA />
+              }
+            ]
           },
         ]
       },
       {
-        path: '',
         element: <AuthLayoutTwo />,
-        children: [
+        children:[
           {
-            path: 'set-2fa',
-            element: <Set2FA />
+            path: "reset-password",
+            element: <ResetPasswordPage />
+          },
+          {
+            path: "verify-signup-email",
+            element: <VerifyEmailPage />
           }
         ]
       },
-  ]
-    // path: "/",
-    // children: [
-    //   {
-    //     path: "",
-    //     element: <GuestGuard />,
-    //     children: [
-    //       {
-    //         path: "/",
-    //         element: <Navigate to="/login" replace />
-    //       },
-
-    //       // Section: centered layout with forget-password
-    //       // {
-    //       //   path: "",
-    //       //   element: <AuthLayout />,
-    //       //   children: [
-    //       //     {
-    //       //       path: "forget-password",
-    //       //       element: <ForgotPasswordPage />
-    //       //     }
-    //       //   ]
-    //       // },
-
-    //       // Section: alternate header layout for set-2fa and reset flows
-    //       // {
-    //       //   path: "",
-    //       //   element: <AuthLayoutTwo />,
-    //       //   children: [
-    //       //     {
-    //       //       path: "set-2fa",
-    //       //       element: <TwoFactorPage />
-    //       //     }
-    //       //   ]
-    //       // },
-
-    //       // Section: carousel layout with signup + login
-    //       {
-    //         path: "",
-    //         element: <AuthCarouselLayout />,
-    //         children: [
-    //           {
-    //             path: "",
-    //             element: <SignUpGuard />,
-    //             children: [
-    //               {
-    //                 path: "signup",
-    //                 element: <SignUpPage />
-    //               }
-    //             ]
-    //           },
-    //           {
-    //             path: "login",
-    //             element: <LoginPage />
-    //           }
-    //         ]
-    //       },
-
-    //       // oauth/google
-    //       // {
-    //       //   path: "oauth/google",
-    //       //   element: <GLoginPage />
-    //       // }
-    //     ]
-    //   },
-
-    //   // accept-invite route wrapped by invite validation guard
-    //   // {
-    //   //   path: "accept-invite",
-    //   //   element: (
-    //   //     <InviteValidationGuard>
-    //   //       <AcceptInvitation />
-    //   //     </InviteValidationGuard>
-    //   //   )
-    //   // },
-
-    //   // reset password & verify email under AuthLayoutTwo
-    //   // {
-    //   //   path: "",
-    //   //   element: <AuthLayoutTwo />,
-    //   //   children: [
-    //   //     {
-    //   //       path: "reset-password",
-    //   //       element: <ResetPasswordPage />
-    //   //     },
-    //   //     {
-    //   //       path: "verify-signup-email",
-    //   //       element: <VerifyEmailPage />
-    //   //     }
-    //   //   ]
-    //   // }
-    // ]
+      {
+        path: 'accept-invite',
+        element: (
+          <InviteValidationGuard>
+            <AcceptInvitation />
+          </InviteValidationGuard>
+        )
+      },
+    ]
   };
 }

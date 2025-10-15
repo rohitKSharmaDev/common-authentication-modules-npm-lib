@@ -11,7 +11,15 @@ export const AuthProvider = ({ config = {}, features = {}, authAdapter, children
     () => ({
       config,
       features,
-      authAdapter
+      authAdapter,
+      notify: (message, type) => {
+        if (typeof authAdapter?.notify === "function") {
+          return authAdapter.notify(message, type);
+          
+        } else {
+          console.warn("notify() not provided in authAdapter");
+        }
+      }
     }),
     [config, features, authAdapter]
   );

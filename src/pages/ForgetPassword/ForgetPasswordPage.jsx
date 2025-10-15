@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   TextField,
@@ -15,11 +14,10 @@ import { LocalPostOffice, KeyboardArrowLeft } from "@mui/icons-material";
 import { FormattedMessage,useIntl } from 'react-intl';
 import { Link as RouterLink } from "react-router-dom";
 
-import { useAuthContext, useAuthAdapter } from "../../providers/AuthProvider.jsx";
+import { useAuthContext } from "../../providers/AuthProvider.jsx";
 
 const ForgetPasswordPage = () => {
-  const adapter = useAuthAdapter();
-  const { config } = useAuthContext();
+  const { config, notify } = useAuthContext();
 
   const [inProgress, setInProgress] = useState(false);
   const intl = useIntl();
@@ -28,7 +26,7 @@ const ForgetPasswordPage = () => {
   const onSubmit = (data, { setErrors, resetForm }) => {
     setInProgress(true);
     config.services.sendForgetPasswordRequest(data).then((res)=> {
-      adapter.notify(getMessage('password-reset-msg'), "success");
+      notify(getMessage('password-reset-msg'), "success");
       resetForm();
 
     }).catch(err => {
@@ -76,12 +74,9 @@ const ForgetPasswordPage = () => {
               {({ field, meta }) => (
               <TextField
                 {...field}
-                // label="Email *"
                 size="medium"
                 label={<FormattedMessage id="email.label" defaultMessage="Email *" />}
                 variant="outlined"
-                  // value={values.email}
-                  // onChange={handleChange}
                 error={meta.touched && Boolean(meta.error)}
                 helperText={meta.touched && meta.error}
                 fullWidth

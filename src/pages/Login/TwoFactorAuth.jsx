@@ -17,10 +17,10 @@ export default function TwoFactorAuth({ userAuthData, startTimerNow }) {
   const [sendCodeRequest, setSendCodeRequest] = useState(false);
 
   const { onAuthSuccess } = useAuth();        // 👈 from adapter
-  const { config, authAdapter } = useAuthContext(); // 👈 config.services + notify
+  const { config, notify } = useAuthContext(); // 👈 config.services + notify
 
   const showSnackBar = (msg, isSuccess = false) => {
-    authAdapter.notify(getMessage(msg), isSuccess ? "success" : "error");
+    notify(getMessage(msg), isSuccess ? "success" : "error");
   };
 
   const timerCompleteCallback = () => {
